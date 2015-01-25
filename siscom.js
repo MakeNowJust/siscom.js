@@ -498,11 +498,11 @@ Combinators.lazy = function lazy(wrap) {
 
 // parsing
 
-function parseString(parser, source) {
+function parseString(parser, source, filename) {
   return parser(new Status(
     source,
     0,
-    "<string>",
+    filename || "<string>",
     1, 1
   ));
 }
