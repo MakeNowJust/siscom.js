@@ -385,7 +385,7 @@ Combinators.left = function left(parsers /*...*/) {
   parsers.push(function () {
     return arguments[0];
   });
-  
+
   return Combinators.seq.apply(null, parsers);
 };
 
@@ -394,7 +394,7 @@ Combinators.right = function right(parsers /*...*/) {
   parsers.push(function () {
     return arguments[parsers.length - 2];
   });
-  
+
   return Combinators.seq.apply(null, parsers);
 };
 
@@ -480,6 +480,19 @@ Combinators.manyTill = function manyTill(parser, end) {
 
 Combinators.between = function between(bra, parser, ket) {
   return Combinators.get(1, bra, parser, ket);
+};
+
+Combinators.lazy = function lazy(wrap) {
+  var
+  cache = false,
+  parser = null;
+  return function lazyParser(status) {
+    if (!cache) {
+      parser = wrap();
+      cache = true
+    }
+    return parser(status);
+  };
 };
 
 
