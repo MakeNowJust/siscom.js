@@ -40,6 +40,7 @@ feature
 - A parser object is usual JavaScript function.
 - A parsing error is usual JavaScript error, and it is very useful, for it has many informations for debugging.  
   for example:
+
   ```console
   <string>:1: expected "y"
   xxyzz
