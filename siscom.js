@@ -496,9 +496,21 @@ Combinators.lazy = function lazy(wrap) {
 };
 
 
+// parsing
+
+function parseString(parser, source) {
+  return parser(new Status(
+    source,
+    0,
+    "<string>",
+    1, 1
+  ));
+}
+
 // exports
 
 exports.Status = Status;
 exports.ParseError = ParseError;
 exports.Parsers = Parsers;
 exports.Combinators = Combinators;
+exports.parseString = parseString;
