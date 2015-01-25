@@ -24,12 +24,10 @@ x = C.some(P.string('x')),
 y = P.string('y'),
 z = C.some(P.string('z'));
 
-console.log(C.times(2, C.sequence(C.choice(x, z), y))(new siscom.Status(
-  'xxyzzy',   // source code
-  0,          // index
-  '<string>', // file name
-  1, 1        // line, column
-)));
+var
+parser = C.times(2, C.sequence(C.choice(x, z), y));
+
+console.log(siscom.parseString(parser, "xxyzzy"));
 // => [[['x', 'x'], 'y'], [['z', 'z'], 'y']]
 ```
 
@@ -46,6 +44,7 @@ feature
   xxyzz
        ^
   ```
+- API looks like [parsers](https://hackage.haskell.org/package/parsers) library of Haskell.
 
 
 license
