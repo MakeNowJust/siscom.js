@@ -457,7 +457,7 @@ Combinators.notFollowedBy = function sepEndBy(parser) {
 };
 
 Combinators.manyTill = function manyTill(parser, end) {
-  return function parser(status) {
+  return function manyTillParser(status) {
     var
     results = [],
     save = status.save();
