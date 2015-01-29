@@ -248,6 +248,25 @@ Parsers.any = function anyParser(status) {
   return c;
 };
 
+Parsers.notChar = function notChar(chr) {
+  if (chr.length !== 1) {
+    throw Error('Parsers.notChar requires a character (not a string)');
+  }
+
+  var
+  expected = Parsers.expected([], JSON.stringify(chr));
+
+  return function notStringParser(status) {
+    var
+    c = status.get();
+    if (c === chr) {
+      expected(status);
+    }
+    status.update(c);
+    return status;
+  };
+};
+
 Parsers.space  = Combinators.named('space' , Parsers.regexp(/\s/ ));
 Parsers.spaces = Combinators.named('spaces', Parsers.regexp(/\s+/));
 
