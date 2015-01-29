@@ -495,6 +495,12 @@ Combinators.lazy = function lazy(wrap) {
   };
 };
 
+Combinators.wrap = function wrap(wrap) {
+  return function wrapParser(status) {
+    return wrap()(status);
+  };
+};
+
 
 // parsing
 
