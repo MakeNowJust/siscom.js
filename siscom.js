@@ -266,6 +266,22 @@ Parsers.octDigit = Parsers.satisfy(function octDigit(chr) {
   return '0' <= chr && chr <= '7';
 });
 
+Parsers.lower = Parsers.satisfy(function lower(chr) {
+  return 'a' <= chr && chr <= 'z';
+});
+Parsers.upper = Parsers.satisfy(function upper(chr) {
+  return 'A' <= chr && chr <= 'Z';
+});
+Parsers.letter = Parsers.satisfy(function letter(chr) {
+  return 'a' <= chr && chr <= 'z' ||
+         'A' <= chr && chr <= 'Z';
+});
+
+Parsers.alphaNum = Parsers.satisfy(function alphaNum(chr) {
+  return 'a' <= chr && chr <= 'z' ||
+         'A' <= chr && chr <= 'Z' ||
+         '0' <= chr && chr <= '9';
+});
 
 Combinators.count = function count(min, max, parser) {
   return function countParser(status) {
