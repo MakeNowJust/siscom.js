@@ -248,8 +248,12 @@ Parsers.any = function anyParser(status) {
   return c;
 };
 
-Parsers.space = Parsers.regexp(/\s/);
-Parsers.spaces = Parsers.regexp(/\s+/);
+Parsers.space  = Combinators.named('space' , Parsers.regexp(/\s/ ));
+Parsers.spaces = Combinators.named('spaces', Parsers.regexp(/\s+/));
+
+Parsers.newline = Parsers.string('\n');
+Parsers.tab     = Parsers.string('\t');
+
 
 Combinators.count = function count(min, max, parser) {
   return function countParser(status) {
