@@ -452,7 +452,7 @@ Combinators.notFollowedBy = function sepEndBy(parser) {
       return;
     }
 
-    Combinators.expected([], JSON.stringify(result))(status);
+    Parsers.expected([], JSON.stringify(result))(status);
   };
 };
 
