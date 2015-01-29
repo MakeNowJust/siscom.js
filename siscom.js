@@ -254,6 +254,18 @@ Parsers.spaces = Combinators.named('spaces', Parsers.regexp(/\s+/));
 Parsers.newline = Parsers.string('\n');
 Parsers.tab     = Parsers.string('\t');
 
+Parsers.digit = Parsers.satisfy(function digit(chr) {
+  return '0' <= chr && chr <= '9';
+});
+Parsers.hexDigit = Parsers.satisfy(function hexDigit(chr) {
+  return '0' <= chr && chr <= '9' ||
+         'a' <= chr && chr <= 'f' ||
+         'A' <= chr && chr <= 'F';
+});
+Parsers.octDigit = Parsers.satisfy(function octDigit(chr) {
+  return '0' <= chr && chr <= '7';
+});
+
 
 Combinators.count = function count(min, max, parser) {
   return function countParser(status) {
