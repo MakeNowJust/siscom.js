@@ -1,6 +1,6 @@
 {
   "name": "siscom",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "it's a parser library for JS.",
   "author": "TSUYUSATO Kitsune <make.just.on@gmail.com>",
   "repository": "https://github.com/MakeNowJust/siscom.js",
