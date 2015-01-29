@@ -442,7 +442,7 @@ Combinators.sepEndBy = function sepEndBy(parser, sepEnd) {
   return Combinators.left(Combinators.sepEndBy(parser, sepEnd), Combinators.optional(sepEnd));
 };
 
-Combinators.notFollowedBy = function sepEndBy(parser) {
+Combinators.notFollowedBy = function notFollowedBy(parser) {
   return function notFollowedByParser(status) {
     var
     save = status.save();
@@ -501,6 +501,17 @@ Combinators.lazy = function lazy(wrap) {
 Combinators.wrap = function wrap(wrap) {
   return function wrapParser(status) {
     return wrap()(status);
+  };
+};
+
+Combinators.named = function named(name, parser) {
+  return function namedParser(status) {
+    try {
+      return parser(status);
+    } catch (e) {
+      checkParseError(e);
+      Parsers.error(e._message, [name], e.unexpected)(status);
+    }
   };
 };
 
