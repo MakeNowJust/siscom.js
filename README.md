@@ -7,7 +7,7 @@ install
 ---
 
 ```console
-$ npm install --save-dev siscom
+$ npm install --save siscom
 ```
 
 example
