@@ -272,16 +272,21 @@ Parsers.regexp = function regexp(re) {
   };
 };
 
-Parsers.any = function anyParser(status) {
+Parsers.any = (function any() {
   var
-  c = status.get();
-  if (c) {
-    status.update(c);
-    return c;
-  } else {
-    Parsers.expected(['any character'], 'end of file')(status);
+  expected = Parsers.expected(['any character'], 'end of file');
+
+  return function anyParser(status) {
+    var
+    c = status.get();
+    if (c) {
+      status.update(c);
+      return c;
+    } else {
+      expected(status);
+    }
   }
-};
+}());
 
 Parsers.notChar = function notChar(chr) {
   if (chr.length !== 1) {
@@ -289,13 +294,16 @@ Parsers.notChar = function notChar(chr) {
   }
 
   var
-  expected = Parsers.expected([], JSON.stringify(chr));
+  expected1 = Parsers.expected([], JSON.stringify(chr)),
+  expected2 = Parsers.expected(['not ' + JSON.stringify(chr)], 'end of file');
 
   return function notStringParser(status) {
     var
     c = status.get();
     if (c === chr) {
-      expected(status);
+      expected1(status);
+    } else if (!c) {
+      expected2(status);
     }
     status.update(c);
     return c;
