@@ -294,7 +294,7 @@ Parsers.notChar = function notChar(chr) {
       expected(status);
     }
     status.update(c);
-    return status;
+    return c;
   };
 };
 
@@ -568,6 +568,40 @@ Combinators.between = function between(bra, parser, ket) {
 };
 
 
+// Styles
+
+function CommentStyle(start, end, line, isNest) {
+  if (!(this instanceof CommentStyle)) return new CommentStyle(start, end, line, isNest);
+
+  this.start = start || '';
+  this.end = end || '';
+  this.line = line || '';
+  this.isNest = isNest;
+}
+
+CommentStyle.prototype.buildSomeSpace = function buildSomeSpace(space) {
+  var
+  line = this.line.length !== 0 &&
+    Combinators.sequence(Parsers.string(this.line), Combinators.many(Parsers.notChar('\n'))),
+  hasMulti = this.start.length !== 0, multi, multiStart;
+
+  if (hasMulti) {
+    multi = Combinators.lazy(function () {
+      return Combinators.sequence(Parsers.string(this.start), multiEnd);
+    }.bind(this));
+    multiEnd = Combinators.manyTill(
+      this.isNest ? Combinators.choice(multi, Parsers.any) : Parsers.any,
+      Parsers.string(this.end));
+  }
+
+  return Combinators.some(
+    line && multi ? Combinators.choice(space, line, multi) :
+            line  ? Combinators.choice(space, line) :
+            multi ? Combinators.choice(space, multi) : space
+  );
+};
+
+
 // parsing
 
 function parseString(parser, source, filename) {
@@ -585,4 +619,5 @@ exports.Status = Status;
 exports.ParseError = ParseError;
 exports.Parsers = Parsers;
 exports.Combinators = Combinators;
+exports.CommentStyle = CommentStyle;
 exports.parseString = parseString;
