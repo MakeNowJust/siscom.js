@@ -379,6 +379,12 @@ Combinators.times = function times(n, parser) {
   return Combinators.count(n, n, parser);
 };
 
+Combinators.skip = function skip(parser) {
+  return function skipParser(status) {
+    parser(status);
+  }
+};
+
 Combinators.skipCount = function skipCount(min, max, parser) {
   return function countParser(status) {
     var
