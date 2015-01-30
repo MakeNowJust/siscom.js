@@ -275,8 +275,12 @@ Parsers.regexp = function regexp(re) {
 Parsers.any = function anyParser(status) {
   var
   c = status.get();
-  status.update(c);
-  return c;
+  if (c) {
+    status.update(c);
+    return c;
+  } else {
+    Parsers.expected(['any character'], 'end of file')(status);
+  }
 };
 
 Parsers.notChar = function notChar(chr) {
