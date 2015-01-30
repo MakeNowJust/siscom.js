@@ -379,6 +379,50 @@ Combinators.times = function times(n, parser) {
   return Combinators.count(n, n, parser);
 };
 
+Combinators.skipCount = function skipCount(min, max, parser) {
+  return function countParser(status) {
+    var
+    i,
+    save = status.save();
+
+    for (i = 0; i < max; i++) {
+      try {
+        parser(status);
+      } catch (e) {
+        checkParseError(e);
+        if (i < min) {
+          throw e;
+        } else {
+          status.reset(save);
+          break;
+        }
+      }
+
+      save = status.save();
+    }
+  };
+};
+
+Combinators.skipMany = function skipMany(parser) {
+  return Combinators.skipCount(0, Infinity, parser);
+};
+
+Combinators.skipSome = function skipSome(parser) {
+  return Combinators.skipCount(1, Infinity, parser);
+};
+
+Combinators.skipMin = function skipMin(min, parser) {
+  return Combinators.skipCount(min, Infinity, parser);
+};
+
+Combinators.skipMax = function skipMax(max, parser) {
+  return Combinators.skipCount(0, max, parser);
+};
+
+Combinators.skipTimes = function skipTimes(n, parser) {
+  return Combinators.skipCount(n, n, parser);
+};
+
 Combinators.option = function option(def, parser) {
   return function optionParser(status) {
     var
@@ -582,7 +626,7 @@ function CommentStyle(start, end, line, isNest) {
 CommentStyle.prototype.buildSomeSpace = function buildSomeSpace(space) {
   var
   line = this.line.length !== 0 &&
-    Combinators.sequence(Parsers.string(this.line), Combinators.many(Parsers.notChar('\n'))),
+    Combinators.sequence(Parsers.string(this.line), Combinators.skipMany(Parsers.notChar('\n'))),
   hasMulti = this.start.length !== 0, multi, multiStart;
 
   if (hasMulti) {
@@ -594,7 +638,7 @@ CommentStyle.prototype.buildSomeSpace = function buildSomeSpace(space) {
       Parsers.string(this.end));
   }
 
-  return Combinators.some(
+  return Combinators.skipSome(
     line && multi ? Combinators.choice(space, line, multi) :
             line  ? Combinators.choice(space, line) :
             multi ? Combinators.choice(space, multi) : space
