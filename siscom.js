@@ -173,6 +173,37 @@ var
 Parsers = {},
 Combinators = {};
 
+Combinators.named = function named(name, parser) {
+  return function namedParser(status) {
+    try {
+      return parser(status);
+    } catch (e) {
+      checkParseError(e);
+      Parsers.error(e._message, [name], e.unexpected)(status);
+    }
+  };
+};
+
+Combinators.lazy = function lazy(wrap) {
+  var
+  cache = false,
+  parser = null;
+  return function lazyParser(status) {
+    if (!cache) {
+      parser = wrap();
+      cache = true
+    }
+    return parser(status);
+  };
+};
+
+Combinators.wrap = function wrap(wrap) {
+  return function wrapParser(status) {
+    return wrap()(status);
+  };
+};
+
+
 Parsers.error = function error(message, expecteds, unexpected) {
   return function errorParser(status) {
     throw new ParseError(status.source, status.index, status.filename, status.line, status.column, message, expecteds, unexpected);
@@ -534,36 +565,6 @@ Combinators.manyTill = function manyTill(parser, end) {
 
 Combinators.between = function between(bra, parser, ket) {
   return Combinators.get(1, bra, parser, ket);
-};
-
-Combinators.lazy = function lazy(wrap) {
-  var
-  cache = false,
-  parser = null;
-  return function lazyParser(status) {
-    if (!cache) {
-      parser = wrap();
-      cache = true
-    }
-    return parser(status);
-  };
-};
-
-Combinators.wrap = function wrap(wrap) {
-  return function wrapParser(status) {
-    return wrap()(status);
-  };
-};
-
-Combinators.named = function named(name, parser) {
-  return function namedParser(status) {
-    try {
-      return parser(status);
-    } catch (e) {
-      checkParseError(e);
-      Parsers.error(e._message, [name], e.unexpected)(status);
-    }
-  };
 };
 
 
